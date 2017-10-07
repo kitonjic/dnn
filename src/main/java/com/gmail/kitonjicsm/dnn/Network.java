@@ -23,7 +23,7 @@ public class Network {
     public Vector feedForward(Vector a) {
         Vector output = a;
         for (int i = 0; i < numberOfLayers - 1; i++) {
-            log(output, i);
+            printData(output, i);
             List<Double> values = new ArrayList<>();
             for (int column = 0; column < weights.get(i).columns(); column++) {
                 Vector weight = weights.get(i).getColumn(column);
@@ -33,7 +33,7 @@ public class Network {
             output = output.add(biases.get(i));
             output = sigmoid(output);
         }
-        log(output, numberOfLayers - 1);
+        printData(output, numberOfLayers - 1);
         return output;
     }
 
@@ -64,7 +64,7 @@ public class Network {
         return randomWeights;
     }
 
-    private void log(Vector output, int i) {
+    private void printData(Vector output, int i) {
         System.out.println("LAYER: " + i);
         System.out.println(output);
         System.out.println();
