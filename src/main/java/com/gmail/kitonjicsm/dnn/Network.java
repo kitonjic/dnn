@@ -8,16 +8,24 @@ import org.la4j.Vector;
 
 public class Network {
 
+    private static final double DEFAULT_LEARNING_RATE = 0.0001;
+
     private int[] sizesOfLayers;
     private int numberOfLayers;
     private List<Vector> biases;
     private List<Matrix> weights;
+    private double learningRate = DEFAULT_LEARNING_RATE;
 
-    public Network(int[] sizesOfLayers) {
-        this.sizesOfLayers = sizesOfLayers;
-        this.numberOfLayers = sizesOfLayers.length;
+    private Network(NetworkBuilder builder) {
+        this.sizesOfLayers = builder.sizesOfLayers;
+        this.numberOfLayers = this.sizesOfLayers.length;
+        this.learningRate = builder.learningRate;
         this.biases = initBiases();
         this.weights = initWeights();
+    }
+
+    public void train(Vector data, Vector expected) {
+        // TODO stochastic gradient descent
     }
 
     public Vector feedForward(Vector a) {
@@ -68,5 +76,34 @@ public class Network {
         System.out.println("LAYER: " + i);
         System.out.println(output);
         System.out.println();
+    }
+
+    public static class NetworkBuilder {
+
+        private int[] sizesOfLayers;
+        private List<Integer> sizes = new ArrayList<>();
+        private double learningRate = DEFAULT_LEARNING_RATE;
+
+        public static NetworkBuilder customNetwork() {
+            return new NetworkBuilder();
+        }
+
+        public NetworkBuilder learningRate(double learningRate) {
+            this.learningRate = learningRate;
+            return this;
+        }
+
+        public NetworkBuilder addLayerWithSize(int layerSize) {
+            this.sizes.add(layerSize);
+            return this;
+        }
+
+        public Network build() {
+            sizesOfLayers = new int[sizes.size()];
+            for (int i = 0; i < sizes.size(); i++) {
+                sizesOfLayers[i] = sizes.get(i);
+            }
+            return new Network(this);
+        }
     }
 }
